@@ -15,6 +15,7 @@ public class MainRobot extends IterativeRobot {
 	public static AnalogChannel leftRangeFinder;
 	public static AnalogChannel rightRangeFinder;
 	
+	
 	public static Joystick rightJoyStick;
 	public static Joystick leftJoyStick;
 	
@@ -24,6 +25,7 @@ public class MainRobot extends IterativeRobot {
 	 */
 	public static int state;
 	
+	//Hello World
 	
 	public MainRobot() {
 		super();
