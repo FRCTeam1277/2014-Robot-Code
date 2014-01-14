@@ -1,0 +1,149 @@
+apply plugin: 'java'
+
+ext {
+	sdkRoot = new File(System.getProperty('user.home'), "sunspotfrcsdk")
+}
+
+configurations {
+	boot
+	romizer
+}
+
+dependencies {
+	compile files("$sdkRoot/lib/wpilibj.jar")
+	compile files("$sdkRoot/lib/networktables-crio.jar")
+	
+	boot files("$sdkRoot/lib/squawk.jar")
+	
+	romizer files("$sdkRoot/bin/romizer_classes.jar")
+	romizer files("$sdkRoot/bin/squawk.jar")
+	romizer files("$sdkRoot/bin/squawk_device_classes.jar")
+	romizer files("$sdkRoot/bin/translator_classes.jar")
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'foo'
+		}
+		resources {
+			srcDir 'resources'
+		}
+	}
+}
+
+// Load Ant tasks
+ant.taskdef(resource: 'com/sun/spot/sdk/tool/ftp/antlib.xml') {
+	classpath{
+		pathelement(location: "$sdkRoot/ant/sdktoolftp.jar")
+		pathelement(location: "$sdkRoot/ant/commons-net-1.4.1.jar")
+		pathelement(location: "$sdkRoot/ant/jakarta-oro-2.0.8.jar")
+	}
+}
+
+// Configure Java compilation
+
+compileJava {
+	options.fork = true
+	options.bootClasspath = configurations.boot.asPath
+	
+	sourceCompatibility = '1.3'
+	targetCompatibility = '1.2'
+	
+	options.debug = true
+	options.deprecation = true
+}
+
+// Preverify
+task preverify(type: Exec, dependsOn: compileJava) {
+	ext {
+		preverifyDir = new File(buildDir, "preverify")
+		rawUtilJarClassesDir = new File(buildDir, "preverify.raw.util")
+		
+		rawUtilJars = []
+		preverifiedUtilJars = configurations.compile.files
+		
+		pathSep = System.getProperty('path.separator')
+	}
+	doFirst {
+		rawUtilJarClassesDir.mkdir()
+		preverifyDir.mkdir()
+		
+		copy {
+			preverifiedUtilJars.each {
+				from zipTree(it)
+			}
+			into preverifyDir
+		}
+		copy {
+			rawUtilJars.each {
+				from zipTree(it)
+			}
+			into rawUtilJarClassesDir
+		}
+	}
+	
+	executable "$sdkRoot/bin/preverify"
+	args "-d", preverifyDir
+	args "-classpath", configurations.boot.asPath + pathSep + sourceSets.main.output.classesDir + pathSep + preverifyDir
+	args sourceSets.main.output.classesDir
+	args rawUtilJarClassesDir
+	
+	outputs.dir preverifyDir
+	outputs.dir rawUtilJarClassesDir
+}
+
+// App jar
+task appJar(type: Jar, dependsOn: preverify) {
+	classifier = 'app'
+	from preverify.preverifyDir
+	from sourceSets.main.output.resourcesDir
+	
+	manifest {
+		attributes 'MIDlet-Name': project.name
+		attributes 'MIDlet-Version': project.version ?: '1.0.0'
+		attributes 'MIDlet-Vendor': 'FIRST'
+		attributes 'MIDlet-1': 'MainRobot, , team1277.org.robot.MainRobot'
+		attributes 'MicroEdition-Profile': 'IMP-1.0'
+		attributes 'MicroEdition-Configuration': 'CLDC-1.1'
+	}
+}
+
+task suite(type: JavaExec, dependsOn: appJar) {
+	ext {
+		jarFile = appJar.archivePath
+		targetDir = new File(buildDir, "suite")
+		imageName = "image"
+	}
+	outputs.dir targetDir
+	
+	classpath configurations.romizer
+	jvmArgs "-XX:CompileCommand=exclude,com/sun/squawk/Method.getParameterTypes",
+		"-XX:CompileCommand=exclude,com/sun/squawk/SymbolParser.getSignatureTypeAt",
+		"-XX:CompileCommand=exclude,com/sun/squawk/SymbolParser.stripMethods"
+	maxHeapSize = "256M"
+	
+	main = 'com.sun.squawk.Romizer'
+	
+	args '-verbose', '-nobuildproperties', "-suitepath:$sdkRoot/cRIO", "-boot:squawk"
+	args '-metadata', '-lnt', '-strip:d', "-cp:$jarFile", '-endian:big',
+		"-o:$imageName", "$jarFile"
+		
+	doLast {
+		copy {
+			from zipTree(jarFile)
+			into targetDir
+			include '**/MANIFEST.MF' // TODO: get this working
+		}
+		
+		// Files generated in working directory
+		ant.move(verbose: false, file: "${imageName}.suite", todir: targetDir)
+		ant.move(verbose: false, file: "${imageName}.suite.metadata", todir: targetDir)
+		ant.move(verbose: false, file: "${imageName}.sym", toDir: targetDir)
+		new File("${imageName}.suite.api").delete()
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.10'
+}
