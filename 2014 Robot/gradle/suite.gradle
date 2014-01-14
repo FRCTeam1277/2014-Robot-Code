@@ -3,6 +3,8 @@ task suite(type: JavaExec, dependsOn: appJar) {
 		jarFile = appJar.archivePath
 		targetDir = new File(buildDir, "suite")
 		imageName = "image"
+		
+		suiteFile = new File(targetDir, imageName + ".suite")
 	}
 	outputs.dir targetDir
 	
