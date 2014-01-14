@@ -31,6 +31,7 @@ public class MainRobot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		System.out.println("Robot Started, Hello Dave.");
 		leftMotors = new Jaguar(Ports.LEFT_DRIVE_PORT);
 		rightMotors = new Jaguar(Ports.RIGHT_DRIVE_PORT);
 		
