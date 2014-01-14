@@ -1,0 +1,28 @@
+task configure << {
+	if(new File(sdkRoot, 'cRIO_conf').isDirectory())
+	{
+		// Copy cRIO config onto robot
+		ant.ftp(server: remoteAddress, remoteDir: '/', userid: 'root', password: '', retriesAllowed: 2) {
+			fileset(dir: new File(sdkRoot, 'cRIO_conf/Java'))
+		}
+	}
+	
+	ant.frcupgrade(
+		remoteaddress: remoteAddress,
+		
+		localotaserverfile: new File(sdkRoot, 'cRIO/FRC_UserProgram.out'),
+		remoteotaserverfilepath: '/ni-rt/system/FRC_JavaVM.out',
+		
+		localvmfile: new File(sdkRoot, 'cRIO/squawk.out'),
+		remotevmfilepath: '/ni-rt/system/squawk.out',
+		
+		localsuitefile: new File(sdkRoot, 'cRIO/squawk.suite'),
+		remotesuitefilepath: '/ni-rt/system/squawk.suite',
+		
+		remoteversionfilepath: '/FRC_ImageVersion.ini',
+		versionfailuremessage: 'Go to http://first.wpi.edu/FRC/frcjava.html to get latest software update'
+	) {
+		version(name: 'Name', value: 'FRC_2014_v52.zip;')
+		version(name: 'Language', value: '"Java;"')
+	}
+}

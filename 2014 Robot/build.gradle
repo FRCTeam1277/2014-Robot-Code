@@ -3,11 +3,15 @@ apply plugin: 'java'
 ext {
 	sdkRoot = new File(System.getProperty('user.home'), "sunspotfrcsdk")
 	robotClass = 'team1277.org.robot.MainRobot'
+	
+	team = 1277
+	remoteAddress = "10." + new StringBuilder(team as String).insert(2, '.') + ".2"
 }
 
 configurations {
 	boot
 	romizer
+	antTasks
 }
 
 dependencies {
@@ -20,6 +24,12 @@ dependencies {
 	romizer files("$sdkRoot/bin/squawk.jar")
 	romizer files("$sdkRoot/bin/squawk_device_classes.jar")
 	romizer files("$sdkRoot/bin/translator_classes.jar")
+	
+	antTasks("org.apache.ant:ant-commons-net:1.9.3") {
+		module("commons-net:commons-net:1.4.1") {
+			dependencies "oro:oro:2.0.8:jar"
+		}
+	}
 }
 
 sourceSets {
@@ -42,10 +52,17 @@ ant.taskdef(resource: 'com/sun/spot/sdk/tool/ftp/antlib.xml') {
 	}
 }
 
+ant.taskdef(name: 'ftp',
+	classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+	classpath: configurations.antTasks.asPath
+)
+
 apply from: 'gradle/compile.gradle'
 apply from: 'gradle/preverify.gradle'
 apply from: 'gradle/jar.gradle'
 apply from: 'gradle/suite.gradle'
+apply from: 'gradle/configure.gradle'
+apply from: 'gradle/deploy.gradle'
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.10'
