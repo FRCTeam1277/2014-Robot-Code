@@ -1,0 +1,34 @@
+task suite(type: JavaExec, dependsOn: appJar) {
+	ext {
+		jarFile = appJar.archivePath
+		targetDir = new File(buildDir, "suite")
+		imageName = "image"
+	}
+	outputs.dir targetDir
+	
+	classpath configurations.romizer
+	jvmArgs "-XX:CompileCommand=exclude,com/sun/squawk/Method.getParameterTypes",
+		"-XX:CompileCommand=exclude,com/sun/squawk/SymbolParser.getSignatureTypeAt",
+		"-XX:CompileCommand=exclude,com/sun/squawk/SymbolParser.stripMethods"
+	maxHeapSize = "256M"
+	
+	main = 'com.sun.squawk.Romizer'
+	
+	args '-verbose', '-nobuildproperties', "-suitepath:$sdkRoot/cRIO", "-boot:squawk"
+	args '-metadata', '-lnt', '-strip:d', "-cp:$jarFile", '-endian:big',
+		"-o:$imageName", "$jarFile"
+		
+	doLast {
+		copy {
+			from zipTree(jarFile)
+			into targetDir
+			include 'META-INF/**' // TODO: get this working
+		}
+		
+		// Files generated in working directory
+		ant.move(verbose: false, file: "${imageName}.suite", todir: targetDir)
+		ant.move(verbose: false, file: "${imageName}.suite.metadata", todir: targetDir)
+		ant.move(verbose: false, file: "${imageName}.sym", toDir: targetDir)
+		new File("${imageName}.suite.api").delete()
+	}
+}
