@@ -64,34 +64,34 @@ public class AutonomousMethods {
 		//10 steps of speed
 		//first step
 		System.out.println("increment: " + increment);
-		if(increment<MAX && increment>((int)((MAX/10)*9))){
+		if(increment<=MAX && increment>=((int)((MAX/10)*9))){
 			System.out.println("setting speed to: 1");
 			speed = 1;
-		}if(increment<((int)(MAX/10)*9) &&increment>((int)((MAX/10)*8))){
+		}if(increment<=((int)(MAX/10)*9) &&increment>=((int)((MAX/10)*8))){
 			System.out.println("setting speed to: " + (speed / 10) * 9);
 			speed = (speed / 10) * 9;
-		}if(increment<((int)(MAX/10)*8) &&increment>((int)((MAX/10)*7))){
+		}if(increment<=((int)(MAX/10)*8) &&increment>=((int)((MAX/10)*7))){
 			System.out.println("setting speed to: " + (speed / 10) * 8);
 			speed = (speed / 10) * 8;
-		}if(increment<((int)(MAX/10)*7) &&increment>((int)((MAX/10)*6))){
+		}if(increment<=((int)(MAX/10)*7) &&increment>=((int)((MAX/10)*6))){
 			System.out.println("setting speed to: " + (speed / 10) * 7);
 			speed = (speed / 10) * 7;
-		}if(increment<((int)(MAX/10)*6) &&increment>((int)((MAX/10)*5))){
+		}if(increment<=((int)(MAX/10)*6) &&increment>=((int)((MAX/10)*5))){
 			System.out.println("setting speed to: " + (speed / 10) * 6);
 			speed = (speed / 10) * 6;
-		}if(increment<((int)(MAX/10)*5) &&increment>((int)((MAX/10)*4))){
+		}if(increment<=((int)(MAX/10)*5) &&increment>=((int)((MAX/10)*4))){
 			System.out.println("setting speed to: " + (speed / 10) * 5);
 			speed = (speed / 10) * 5;
-		}if(increment<((int)(MAX/10)*4) &&increment>((int)((MAX/10)*3))){
+		}if(increment<=((int)(MAX/10)*4) &&increment>=((int)((MAX/10)*3))){
 			System.out.println("setting speed to: " + (speed / 10) * 4);
 			speed = (speed / 10) * 4;
-		}if(increment<((int)(MAX/10)*3) &&increment>((int)((MAX/10)*2))){
+		}if(increment<=((int)(MAX/10)*3) &&increment>=((int)((MAX/10)*2))){
 			System.out.println("setting speed to: " + (speed / 10) * 3);
 			speed = (speed / 10) * 3;
-		}if(increment<((int)(MAX/10)*2) &&increment>((int)((MAX/10)*1))){
+		}if(increment<=((int)(MAX/10)*2) &&increment>=((int)((MAX/10)*1))){
 			System.out.println("setting speed to: " + (speed / 10) * 2);
 			speed = (speed / 10) * 2;
-		}if(increment<((int)(MAX/10)*1) &&increment>((int)((MAX/10)*0))){
+		}if(increment<=((int)(MAX/10)*1) &&increment>=((int)((MAX/10)*0))){
 			System.out.println("setting speed to: " + (speed / 10) * 1);
 			speed = (speed / 10) * 1;
 		}
