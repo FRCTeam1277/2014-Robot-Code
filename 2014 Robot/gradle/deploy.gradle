@@ -2,6 +2,6 @@ task deploy(dependsOn: suite) << {
 	ant.frcdeploy(
 		remoteaddress: remoteAddress,
 		localfile: suite.suiteFile,
-		remotepath: '/ni-rt/system/robot.suite'
+		remotefilepath: '/ni-rt/system/robot.suite'
 	)
 }
