@@ -1,0 +1,45 @@
+import org.gradle.plugins.ide.eclipse.model.*
+import org.gradle.plugins.ide.eclipse.model.internal.*
+
+apply plugin: 'eclipse'
+
+eclipse {
+	jdt {
+		sourceCompatibility = 1.3
+		targetCompatibility = 1.2
+	}
+	
+	classpath {
+		file {
+			whenMerged { cp ->
+				FileReferenceFactory frf = new FileReferenceFactory()
+				
+				cp.entries.clear()
+				
+				sourceSets.main.java.srcDirs.each {
+					cp.entries << new SourceFolder(it as String, "eclipse-bin/$it.name")
+				}
+				
+				configurations.compile.resolve().each { File dep ->
+					FileReference libRef = frf.fromFile(dep)
+					Library lib = new Library(libRef)
+					
+					if(dep.path.contains('wpilibj'))
+					{
+						FileReference jdocRef = frf.fromFile(new File(sdkRoot, 'doc/javadoc'))
+						lib.javadocPath = jdocRef
+						lib.entryAttributes.javadoc_location = jdocRef.file.toURI() as String // Gradle assumes it's a jar, not a directory
+						lib.sourcePath = frf.fromFile(new File(sdkRoot, 'lib/wpilibj.src.zip'))
+					}
+					else if(dep.path.contains('networktables'))
+					{
+						FileReference jdocRef = frf.fromFile(new File(sdkRoot, 'desktop-lib/networktables-desktop-javadoc.jar'))
+						lib.javadocPath = jdocRef
+						lib.sourcePath = frf.fromFile(new File(sdkRoot, 'desktop-lib/networktables-desktop-sources.jar'))
+					}
+					entries << lib
+				}
+			}
+		}
+	}
+}

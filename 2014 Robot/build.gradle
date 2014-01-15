@@ -14,6 +14,10 @@ configurations {
 	antTasks
 }
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
 	compile files("$sdkRoot/lib/wpilibj.jar")
 	compile files("$sdkRoot/lib/networktables-crio.jar")
@@ -63,6 +67,8 @@ apply from: 'gradle/jar.gradle'
 apply from: 'gradle/suite.gradle'
 apply from: 'gradle/configure.gradle'
 apply from: 'gradle/deploy.gradle'
+apply from: 'gradle/remote.gradle'
+apply from: 'gradle/eclipse.gradle'
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.10'
