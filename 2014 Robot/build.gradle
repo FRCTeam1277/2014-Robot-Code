@@ -69,6 +69,7 @@ apply from: 'gradle/configure.gradle'
 apply from: 'gradle/deploy.gradle'
 apply from: 'gradle/remote.gradle'
 apply from: 'gradle/eclipse.gradle'
+apply from: 'gradle/emulator.gradle'
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.10'

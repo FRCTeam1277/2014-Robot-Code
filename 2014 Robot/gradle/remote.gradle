@@ -1,19 +1,19 @@
 /*
  I think it works something like this:
-	- remoteRun to run the robot code
-	- remoteDebugRun to run the robot code with the debug server
-	- remoteDebug to connect to the debug server started by remoteDebugRun
+	- runRemote to run the robot code
+	- runDebugRemote to run the robot code with the debug server
+	- debugRemote to connect to the debug server started by remoteDebugRun
 */
 
-task remoteRun << {
+task runRemote << {
 	ant.frcrun(remoteaddress: remoteAddress)
 }
 
-task remoteDebugRun << {
+task runDebugRemote << {
 	ant.frcrun(remoteaddress: remoteAddress, debug: true)
 }
 
-task remoteDebug(type: JavaExec, dependsOn: appJar) {
+task debugRemote(type: JavaExec, dependsOn: appJar) {
 	
 	doFirst {
 		println "Connecting to debug on $remoteAddress:2800"

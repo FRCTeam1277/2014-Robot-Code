@@ -1,0 +1,21 @@
+ext {
+	emulatorJar = file('lib/frcEmulator.jar')
+}
+
+task runEmulator(type: JavaExec, dependsOn: jar) {
+	classpath emulatorJar
+	classpath jar.archivePath
+	
+	main = 'emulator.RobotEmulator'
+	args robotClass
+}
+
+task debugEmulator(type: JavaExec, dependsOn: jar) {
+	classpath emulatorJar
+	classpath jar.archivePath
+	
+	main = 'emulator.RobotEmulator'
+	args robotClass
+	
+	debug = true
+}
