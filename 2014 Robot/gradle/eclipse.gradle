@@ -44,3 +44,16 @@ eclipse {
 		}
 	}
 }
+
+task eclipseLaunchConfigs << {
+	writeLaunchConfig('Run on Robot', 'deploy remoteRun')
+}
+
+tasks.eclipse.dependsOn eclipseLaunchConfigs
+
+def writeLaunchConfig(String name, String args)
+{
+	String scriptName = System.getProperty('os.name').toLowerCase().contains('win') ? 'gradlew.bat' : 'gradlew'
+	String launchConfig = file('gradle/launch.xml').text.replace('@LAUNCH_ARGS@', args).replace('@SCRIPT_NAME@', scriptName)
+	file(name + ".launch").text = launchConfig
+}
