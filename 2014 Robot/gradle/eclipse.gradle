@@ -17,14 +17,15 @@ eclipse {
 				cp.entries.clear()
 				
 				sourceSets.main.java.srcDirs.each {
-					cp.entries << new SourceFolder(it as String, "eclipse-bin/$it.name")
+					String path = projectDir.absoluteFile.toURI().relativize(it.absoluteFile.toURI()).path
+					cp.entries << new SourceFolder(path, "eclipse-bin/$it.name")
 				}
 				
-				configurations.compile.resolve().each { File dep ->
+				[configurations.compile.resolve(), configurations.boot.resolve()]*.each { File dep ->
 					FileReference libRef = frf.fromFile(dep)
 					Library lib = new Library(libRef)
 					
-					if(dep.path.contains('wpilibj'))
+					if(dep.path.contains('wpilibj') || dep.path.contains('squawk'))
 					{
 						FileReference jdocRef = frf.fromFile(new File(sdkRoot, 'doc/javadoc'))
 						lib.javadocPath = jdocRef
