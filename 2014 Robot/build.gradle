@@ -39,7 +39,7 @@ dependencies {
 sourceSets {
 	main {
 		java {
-			srcDir 'foo'
+			srcDir 'src'
 		}
 		resources {
 			srcDir 'resources'
