@@ -12,7 +12,6 @@ public class AutonomousMethods {
 	
 
 
-	@SuppressWarnings("unused")
 	public static void lineUp() {
 		if (LINE_UP_METHOD == 1) {
 			lineUpWithAdjust();
@@ -42,17 +41,17 @@ public class AutonomousMethods {
                 MAX = ranges[2];
         }
         if(ranges[0] > ranges[1]){
-                MainRobot.leftMotors.set(getSpeedFromAngle(ranges[2]));
-                MainRobot.rightMotors.set(Util.inverse(getSpeedFromAngle(ranges[2])));
+                MainRobot.setLeftMotors(getSpeedFromAngle(ranges[2]));
+                MainRobot.setRightMotors(Util.inverse(getSpeedFromAngle(ranges[2])));
         }
         if(ranges[1] > ranges[0]){
-                MainRobot.leftMotors.set(Util.inverse(getSpeedFromAngle(ranges[2])));
-                MainRobot.rightMotors.set(getSpeedFromAngle(ranges[2]));
+                MainRobot.setLeftMotors(Util.inverse(getSpeedFromAngle(ranges[2])));
+                MainRobot.setRightMotors(getSpeedFromAngle(ranges[2]));
         }
         if(rangeComp(ranges[2], -10, 10)){
                 System.out.println("equal ranges");
-                MainRobot.leftMotors.set(0);
-                MainRobot.rightMotors.set(0);
+                MainRobot.setLeftMotors(0);
+                MainRobot.setRightMotors(0);
                 MainRobot.state = States.TELEOP_MANUAL_DRIVE;
         }
 	}

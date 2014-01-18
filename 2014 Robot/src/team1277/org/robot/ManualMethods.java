@@ -1,5 +1,6 @@
 package team1277.org.robot;
 
+
 public class ManualMethods {
 	private final static int TANK_DRIVE_METHOD = 1;
 	private final static int ARCADE_DRIVE_METHOD = 1;
@@ -25,12 +26,11 @@ public class ManualMethods {
 			double leftCoord = MainRobot.leftJoyStick.getY();
 			double rightCoord = MainRobot.rightJoyStick.getY();
 
-			MainRobot.leftMotors.set(leftCoord*speed);
-			MainRobot.rightMotors.set(rightCoord*speed);
+			MainRobot.setLeftMotors(leftCoord*speed);
+			MainRobot.setRightMotors(rightCoord*speed);
 		}
 	}
 
-	@SuppressWarnings("unused")
 	public static void arcadeDrive() {
 		if (ARCADE_DRIVE_METHOD == 1) {
 			adjustingArcadeDrive();
@@ -53,23 +53,23 @@ public class ManualMethods {
 
 			if(leftX == 0){
 				//forward
-				MainRobot.leftMotors.set(leftY);
-				MainRobot.rightMotors.set(leftY);
+				MainRobot.setLeftMotors(leftY);
+				MainRobot.setRightMotors(leftY);
 			}
 			if(leftY == 0){
 				//right
-				MainRobot.leftMotors.set(leftX);
-				MainRobot.rightMotors.set(Util.inverse(leftX));
+				MainRobot.setLeftMotors(leftX);
+				MainRobot.setRightMotors(Util.inverse(leftX));
 			}
 			if(leftX != 0 && leftY != 0){
 				//combo
 				if(leftX > 0){
-					MainRobot.leftMotors.set(leftY);
-					MainRobot.rightMotors.set(leftX / 2);
+					MainRobot.setLeftMotors(leftY);
+					MainRobot.setRightMotors(leftX / 2);
 				}
 				if(leftX < 0){
-					MainRobot.leftMotors.set(leftY / 2);
-					MainRobot.rightMotors.set(Math.abs(leftX));
+					MainRobot.setLeftMotors(leftY / 2);
+					MainRobot.setRightMotors(Math.abs(leftX));
 				}
 			}
 		}
@@ -78,23 +78,23 @@ public class ManualMethods {
 
 			if(leftX == 0){
 				//backward
-				MainRobot.leftMotors.set(leftY);
-				MainRobot.rightMotors.set(leftY);
+				MainRobot.setLeftMotors(leftY);
+				MainRobot.setRightMotors(leftY);
 			}
 			if(leftY == 0){
 				//right
-				MainRobot.leftMotors.set(leftX);
-				MainRobot.rightMotors.set(Util.inverse(leftX));
+				MainRobot.setLeftMotors(leftX);
+				MainRobot.setRightMotors(Util.inverse(leftX));
 			}
 			if(leftX != 0 && leftY != 0){
 				//combo
 				if(leftX > 0){
-					MainRobot.leftMotors.set(leftY);
-					MainRobot.rightMotors.set(Util.inverse(leftX / 2));
+					MainRobot.setLeftMotors(leftY);
+					MainRobot.setRightMotors(Util.inverse(leftX / 2));
 				}
 				if(leftX < 0){
-					MainRobot.leftMotors.set(leftY / 2);
-					MainRobot.rightMotors.set(leftX);
+					MainRobot.setLeftMotors(leftY / 2);
+					MainRobot.setRightMotors(leftX);
 				}
 
 

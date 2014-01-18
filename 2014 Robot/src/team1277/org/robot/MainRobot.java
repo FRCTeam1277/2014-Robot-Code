@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class MainRobot extends IterativeRobot {
 	//Declaring static components
-	public static Jaguar rightMotors;
-	public static Jaguar leftMotors;
+	public static Jaguar rightMotor1;
+	public static Jaguar rightMotor2;
+	public static Jaguar leftMotor1;
+	public static Jaguar leftMotor2;
 	
 	public static AnalogChannel leftRangeFinder;
 	public static AnalogChannel rightRangeFinder;
@@ -31,11 +33,14 @@ public class MainRobot extends IterativeRobot {
 		super();
 	}
 	
-	@Override
+	
 	public void robotInit() {
 		System.out.println("Robot Started, Hello Dave.");
-		leftMotors = new Jaguar(Ports.LEFT_DRIVE_PORT);
-		rightMotors = new Jaguar(Ports.RIGHT_DRIVE_PORT);
+		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
+		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
+
+		leftMotor2 = new Jaguar(Ports.LEFT_DRIVE_PORT_2);
+		rightMotor2 = new Jaguar(Ports.RIGHT_DRIVE_PORT_2);
 		
 		leftJoyStick = new Joystick(Ports.LEFT_JOYSTICK);
 		rightJoyStick = new Joystick(Ports.RIGHT_JOYSTICK);
@@ -44,24 +49,24 @@ public class MainRobot extends IterativeRobot {
 		rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 	}
 	
-	@Override
+	
 	public void disabledInit() {
-		leftMotors.set(0);
-		rightMotors.set(0);
+		setLeftMotors(0);
+		setRightMotors(0);
 	}
 	
-	@Override
+	
 	public void disabledPeriodic() {
 		
 	}
 	
-	@Override
+	
 	public void teleopInit() {
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
 	}
 	
-	@Override
+	
 	public void teleopPeriodic() {
 		if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
@@ -95,14 +100,24 @@ public class MainRobot extends IterativeRobot {
 		DriverStationLCD.getInstance().updateLCD();
 	}
 	
-	@Override
+	
 	public void autonomousInit() {
 		
 	}
 	
-	@Override
+	
 	public void autonomousPeriodic() {
 		
+	}
+	
+	public static void setRightMotors(double val) {
+		rightMotor1.set(val);
+		rightMotor2.set(val);
+	}
+	
+	public static void setLeftMotors(double val) {
+		leftMotor1.set(val);
+		leftMotor2.set(val);
 	}
 	
 }
