@@ -1,0 +1,60 @@
+/*
+ I think it works something like this:
+	- runRemote to run the robot code
+	- runDebugRemote to run the robot code with the debug server
+	- debugRemote to connect to the debug server started by remoteDebugRun
+*/
+
+task runRemote << {
+	ant.frcrun(remoteaddress: remoteAddress)
+}
+
+task runDebugRemote << {
+	ant.frcrun(remoteaddress: remoteAddress, debug: true)
+}
+
+task debugRemote(type: JavaExec, dependsOn: appJar) {
+	
+	doFirst {
+		println "Connecting to debug on $remoteAddress:2800"
+	}
+	
+	ext {
+		proxyClasspath = files(
+			"$sdkRoot/bin/debuggerproxylauncher.jar",
+			"$sdkRoot/bin/romizer_classes.jar",
+			"$sdkRoot/bin/hosted-support_classes.jar",
+			"$sdkRoot/bin/debugger-proxy_classes.jar",
+			"$sdkRoot/bin/translator_classes.jar",
+			"$sdkRoot/bin/spotclient_host.jar",
+			"$sdkRoot/bin/signing_host.jar",
+			"$sdkRoot/bin/squawk_device_classes.jar",
+			"$sdkRoot/lib/multihop_common.jar",
+			"$sdkRoot/lib/spotlib_host.jar",
+			"$sdkRoot/lib/spotlib_common.jar",
+			"$sdkRoot/lib/squawk_common.jar",
+			"$sdkRoot/lib/RXTXcomm.jar",
+			"$sdkRoot/lib/spotclient_host.jar",
+			"$sdkRoot/lib/signing_host.jar"
+		)
+		
+		cp = files( // call it cp to not mess with classpath property of JavaExec and to match the arg name
+			"$sdkRoot/lib/squawk.jar",
+			"$sdkRoot/lib/wpilibj.jar",
+			"$sdkRoot/lib/networktables-crio.jar",
+			appJar.archivePath
+		)
+	}
+	
+	classpath = proxyClasspath
+	main = 'com.sun.squawk.debugger.sdp.SDP'
+	
+	jvmArgs "-XX:CompileCommand=exclude,com/sun/squawk/Method.getParameterTypes",
+		"-XX:CompileCommand=exclude,com/sun/squawk/SymbolParser.getSignatureTypeAt",
+		"-XX:CompileCommand=exclude,com/sun/squawk/SymbolParser.stripMethods"
+	maxHeapSize = "256M"
+	
+	args "-vm:socket://$remoteAddress:2800", '-singlesession'
+	args "-cp:${cp.asPath}"
+	
+}

@@ -1,0 +1,124 @@
+import groovy.xml.MarkupBuilder
+
+import org.gradle.plugins.ide.eclipse.model.*
+import org.gradle.plugins.ide.eclipse.model.internal.*
+
+apply plugin: 'eclipse'
+
+eclipse {
+	jdt {
+		sourceCompatibility = 1.3
+		targetCompatibility = 1.2
+	}
+	
+	classpath {
+		file {
+			whenMerged { cp ->
+				FileReferenceFactory frf = new FileReferenceFactory()
+				
+				cp.entries.clear()
+				
+				sourceSets.main.java.srcDirs.each {
+					String path = projectDir.absoluteFile.toURI().relativize(it.absoluteFile.toURI()).path
+					cp.entries << new SourceFolder(path, "eclipse-bin/$it.name")
+				}
+				
+				[configurations.compile.resolve(), configurations.boot.resolve()]*.each { File dep ->
+					FileReference libRef = frf.fromFile(dep)
+					Library lib = new Library(libRef)
+					
+					if(dep.path.contains('wpilibj') || dep.path.contains('squawk'))
+					{
+						FileReference jdocRef = frf.fromFile(new File(sdkRoot, 'doc/javadoc'))
+						lib.javadocPath = jdocRef
+						lib.entryAttributes.javadoc_location = jdocRef.file.toURI() as String // Gradle assumes it's a jar, not a directory
+						lib.sourcePath = frf.fromFile(new File(sdkRoot, 'lib/wpilibj.src.zip'))
+					}
+					else if(dep.path.contains('networktables'))
+					{
+						FileReference jdocRef = frf.fromFile(new File(sdkRoot, 'desktop-lib/networktables-desktop-javadoc.jar'))
+						lib.javadocPath = jdocRef
+						lib.sourcePath = frf.fromFile(new File(sdkRoot, 'desktop-lib/networktables-desktop-sources.jar'))
+					}
+					entries << lib
+				}
+			}
+		}
+	}
+}
+
+//TODO: the launch config structure is fairly regular - could generate it from a map just by looking at the classes of keys
+task eclipseLaunchConfigs << {
+	def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
+	def gradlew = '${workspace_loc:/' + project.name + '/' + (isWindows ? 'gradlew.bat' : 'gradlew') + '}'
+	def workingDir = '${workspace_loc:/' + project.name + '}'
+	
+	file('Deploy to Robot.launch').withWriter { w-> 
+		def xml = new MarkupBuilder(w)
+		xml.mkp.xmlDeclaration(version: '1.0', encoding: 'UTF-8', standalone: 'no')
+		xml.launchConfiguration(type: 'org.eclipse.ui.externaltools.ProgramLaunchConfigurationType') {
+			listAttribute(key: 'org.eclipse.debug.ui.favoriteGroups') {
+				listEntry(value: 'org.eclipse.ui.externaltools.launchGroup')
+			}
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_LOCATION', value: gradlew)
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS', value: 'deploy')
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY', value: projectDir)
+		}
+	}
+	
+	file('Run on Robot.launch').withWriter { w ->
+		def xml = new MarkupBuilder(w)
+		xml.mkp.xmlDeclaration(version: '1.0', encoding: 'UTF-8', standalone: 'no')
+		xml.mkp.comment("Automatically generated on ${new Date()} - DO NOT EDIT")
+		xml.launchConfiguration(type: "org.eclipse.ui.externaltools.ProgramLaunchConfigurationType") {
+			listAttribute(key: 'org.eclipse.debug.ui.favoriteGroups') {
+				listEntry(value: 'org.eclipse.ui.externaltools.launchGroup')
+			}
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_LOCATION', value: gradlew)
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS', value: 'deploy runRemote')
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY', value: projectDir)
+		}
+	}
+	
+	//TODO Debug on Robot launch configuration
+	
+	file('Run in Emulator.launch').withWriter { w ->
+		def xml = new MarkupBuilder(w)
+		xml.mkp.xmlDeclaration(version: '1.0', encoding: 'UTF-8', standalone: 'no')
+		xml.mkp.comment("Automatically generated on ${new Date()} - DO NOT EDIT")
+		xml.launchConfiguration(type: "org.eclipse.ui.externaltools.ProgramLaunchConfigurationType") {
+			listAttribute(key: 'org.eclipse.debug.ui.favoriteGroups') {
+				listEntry(value: 'org.eclipse.ui.externaltools.launchGroup')
+			}
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_LOCATION', value: gradlew)
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS', value: 'runEmulator')
+			stringAttribute(key: 'org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY', value: projectDir)
+		}
+	}
+	
+	file('Debug in Emulator.launch').withWriter {w ->
+		def xml = new MarkupBuilder(w)
+		xml.mkp.xmlDeclaration(version: '1.0', encoding: 'UTF-8', standalone: 'no')
+		xml.mkp.comment("Automatically generated on ${new Date()} - DO NOT EDIT")
+		xml.launchConfiguration(type: 'org.eclipse.jdt.launching.remoteJavaApplication') {
+			listAttribute(key: 'org.eclipse.debug.ui.favoriteGroups') {
+				listEntry(value: 'org.eclipse.debug.ui.launchGroup.debug')
+			}
+			listAttribute(key: 'org.eclipse.debug.core.MAPPED_RESOURCE_PATHS') {
+				listEntry(value: "/$project.name")
+			}
+			listAttribute(key: 'org.eclipse.debug.core.MAPPED_RESOURCE_TYPES') {
+				listEntry(value: 4)
+			}
+			booleanAttribute(key: 'org.eclipse.jdt.launching.ALLOW_TERMINATE', value: true)
+			mapAttribute(key: 'org.eclipse.jdt.launching.CONNECT_MAP') {
+				mapEntry(key: 'hostname', value: 'localhost')
+				mapEntry(key: 'port', value: 5005)
+			}
+			stringAttribute(key: 'org.eclipse.jdt.launching.PROJECT_ATTR', value: project.name)
+			stringAttribute(key: 'org.eclipse.jdt.launching.VM_CONNECTOR_ID',  value: 'org.eclipse.jdt.launching.socketAttachConnector')
+		}
+	}
+}
+
+tasks.eclipse.dependsOn eclipseLaunchConfigs
