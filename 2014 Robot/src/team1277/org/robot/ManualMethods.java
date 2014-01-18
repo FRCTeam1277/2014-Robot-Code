@@ -3,7 +3,7 @@ package team1277.org.robot;
 
 public class ManualMethods {
 	private final static int TANK_DRIVE_METHOD = 1;
-	private final static int ARCADE_DRIVE_METHOD = 1;
+	private final static int ARCADE_DRIVE_METHOD = 2;
 
 	public final static int DRIVE_MODE_TANK = 1;
 	public final static int DRIVE_MODE_ARCADE = 2;
@@ -34,6 +34,12 @@ public class ManualMethods {
 	public static void arcadeDrive() {
 		if (ARCADE_DRIVE_METHOD == 1) {
 			adjustingArcadeDrive();
+		}
+		else if (ARCADE_DRIVE_METHOD == 2) {
+			double y = MainRobot.rightJoyStick.getY();
+			double x = MainRobot.rightJoyStick.getX();
+			MainRobot.setLeftMotors(y+x);
+			MainRobot.setRightMotors(y-x);
 		}
 	}
 
