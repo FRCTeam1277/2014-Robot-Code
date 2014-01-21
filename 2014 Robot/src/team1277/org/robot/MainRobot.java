@@ -73,6 +73,8 @@ public class MainRobot extends IterativeRobot {
 	
 	public void teleopPeriodic() {
 		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
+		DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(Gyro.getAngle()));
+		Gyro.updateAngle(20d/1000d);
 		if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
 		}
