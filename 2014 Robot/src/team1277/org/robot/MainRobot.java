@@ -21,6 +21,9 @@ public class MainRobot extends IterativeRobot {
 	public static Joystick rightJoyStick;
 	public static Joystick leftJoyStick;
 	
+	public static AnalogChannel gyro;
+	
+	
 	
 	/**
 	 * The current state of the robot
@@ -47,6 +50,7 @@ public class MainRobot extends IterativeRobot {
 		
 		leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
+		gyro = new AnalogChannel(Ports.GYRO);
 	}
 	
 	
@@ -68,6 +72,7 @@ public class MainRobot extends IterativeRobot {
 	
 	
 	public void teleopPeriodic() {
+		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
 		if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
 		}
