@@ -103,6 +103,11 @@ public class MainRobot extends IterativeRobot {
 			ManualMethods.driveMode = ManualMethods.DRIVE_MODE_ARCADE;
 			state = States.TELEOP_MANUAL_DRIVE;
 		}
+		else if (rightJoyStick.getRawButton(4)) {
+			DriverStationLCD.getInstance().println(Line.kUser2, 1, "4");
+			ManualMethods.driveMode = 3;
+			state = States.TELEOP_MANUAL_DRIVE;
+		}
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}

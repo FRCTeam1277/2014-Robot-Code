@@ -20,6 +20,8 @@ public class Gyro {
 	public static void updateAngle(double time) {
 		double val = MainRobot.gyro.getVoltage();
 		val -= initVolt;
+		if (Math.abs(val)<.1d)
+			return;
 		double change = val/.007d;
 		angle += change * time;
                 if (angle>360)
