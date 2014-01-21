@@ -51,6 +51,8 @@ public class MainRobot extends IterativeRobot {
 		leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 		gyro = new AnalogChannel(Ports.GYRO);
+                
+                
 	}
 	
 	
@@ -68,6 +70,7 @@ public class MainRobot extends IterativeRobot {
 	public void teleopInit() {
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
+                Gyro.init();
 	}
 	
 	

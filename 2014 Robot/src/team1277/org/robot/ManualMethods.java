@@ -38,11 +38,17 @@ public class ManualMethods {
 		else if (ARCADE_DRIVE_METHOD == 2) {
 			double y = MainRobot.rightJoyStick.getY();
 			double x = MainRobot.rightJoyStick.getX();
-			MainRobot.setLeftMotors(y+x);
-			MainRobot.setRightMotors(y-x);
+                        double dist = Math.sqrt(y*y+x*x);
+			MainRobot.setLeftMotors((y-x)*dist);
+			MainRobot.setRightMotors((y+x)*dist);
 		}
 	}
-
+        
+        public static void relitiveDrive() {
+            double y = MainRobot.rightJoyStick.getY();
+            double x = MainRobot.rightJoyStick.getX();
+            //double ang = Math.
+        }
 
 
 	/**
