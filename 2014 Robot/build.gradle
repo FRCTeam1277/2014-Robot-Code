@@ -1,5 +1,6 @@
 apply plugin: 'java'
 
+// Why did you revert the merge?
 ext {
 	sdkRoot = new File(System.getProperty('user.home'), "sunspotfrcsdk")
 	robotClass = 'team1277.org.robot.MainRobot'
