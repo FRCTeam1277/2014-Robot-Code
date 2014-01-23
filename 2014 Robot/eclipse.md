@@ -10,7 +10,7 @@ Since Eclipse isn't set up at this point, it needs to be done from the command l
 to wherever you cloned the Git repository (Google is your friend if you don't have a lot of command-line experience). There, run `./gradlew eclipse`
 on OS X or Linux or `gradlew.bat eclipse` on Windows to generate the Eclipse files. Then, you can open the project in Eclipse.
 
-If you prefer, there's a Gradle Eclipse plugin also. Follow the instructions (here)[https://github.com/spring-projects/eclipse-integration-gradle/]
+If you prefer, there's a Gradle Eclipse plugin also. Follow the instructions [here](https://github.com/spring-projects/eclipse-integration-gradle/)
 to install it. Then, use File->Import and select "Gradle Project". The importer will run Gradle to generate the project files.
 
 ### Running Things
