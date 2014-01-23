@@ -9,14 +9,20 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class MainRobot extends IterativeRobot {
 	//Declaring static components
-	public static Jaguar rightMotors;
-	public static Jaguar leftMotors;
+	public static Jaguar rightMotor1;
+	public static Jaguar rightMotor2;
+	public static Jaguar leftMotor1;
+	public static Jaguar leftMotor2;
 	
 	public static AnalogChannel leftRangeFinder;
 	public static AnalogChannel rightRangeFinder;
 	
+	
 	public static Joystick rightJoyStick;
 	public static Joystick leftJoyStick;
+	
+	public static AnalogChannel gyro;
+	
 	
 	
 	/**
@@ -24,43 +30,54 @@ public class MainRobot extends IterativeRobot {
 	 */
 	public static int state;
 	
+	//Hello World
 	
 	public MainRobot() {
 		super();
 	}
 	
-	@Override
+	
 	public void robotInit() {
 		System.out.println("Robot Started, Hello Dave.");
-		leftMotors = new Jaguar(Ports.LEFT_DRIVE_PORT);
-		rightMotors = new Jaguar(Ports.RIGHT_DRIVE_PORT);
+		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
+		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
+
+		leftMotor2 = new Jaguar(Ports.LEFT_DRIVE_PORT_2);
+		rightMotor2 = new Jaguar(Ports.RIGHT_DRIVE_PORT_2);
 		
 		leftJoyStick = new Joystick(Ports.LEFT_JOYSTICK);
 		rightJoyStick = new Joystick(Ports.RIGHT_JOYSTICK);
 		
 		leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
+		gyro = new AnalogChannel(Ports.GYRO);
+                
+                
 	}
 	
-	@Override
+	
 	public void disabledInit() {
-		leftMotors.set(0);
-		rightMotors.set(0);
+		setLeftMotors(0);
+		setRightMotors(0);
 	}
 	
-	@Override
+	
 	public void disabledPeriodic() {
 		
 	}
 	
-	@Override
+	
 	public void teleopInit() {
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
+                Gyro.init();
 	}
 	
-	@Override
+	
 	public void teleopPeriodic() {
+//		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
+//		DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(Gyro.getAngle()));
+//		Gyro.updateAngle(20d/1000d);
 		if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
 		}
@@ -86,6 +103,11 @@ public class MainRobot extends IterativeRobot {
 			ManualMethods.driveMode = ManualMethods.DRIVE_MODE_ARCADE;
 			state = States.TELEOP_MANUAL_DRIVE;
 		}
+		else if (rightJoyStick.getRawButton(4)) {
+			DriverStationLCD.getInstance().println(Line.kUser2, 1, "4");
+			ManualMethods.driveMode = 3;
+			state = States.TELEOP_MANUAL_DRIVE;
+		}
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}
@@ -93,14 +115,24 @@ public class MainRobot extends IterativeRobot {
 		DriverStationLCD.getInstance().updateLCD();
 	}
 	
-	@Override
+	
 	public void autonomousInit() {
 		
 	}
 	
-	@Override
+	
 	public void autonomousPeriodic() {
 		
+	}
+	
+	public static void setRightMotors(double val) {
+		rightMotor1.set(val);
+		rightMotor2.set(val);
+	}
+	
+	public static void setLeftMotors(double val) {
+		leftMotor1.set(val);
+		leftMotor2.set(val);
 	}
 	
 }
