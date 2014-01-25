@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD.Line;
 
 public class ManualMethods {
 	private final static int TANK_DRIVE_METHOD = 1;
-	private final static int ARCADE_DRIVE_METHOD = 1;
+	private final static int ARCADE_DRIVE_METHOD = 2;
 
 	public final static int DRIVE_MODE_TANK = 1;
 	public final static int DRIVE_MODE_ARCADE = 2;
@@ -43,7 +43,7 @@ public class ManualMethods {
 		if (ARCADE_DRIVE_METHOD == 1) {
 			adjustingArcadeDrive();
 		}
-		/*
+		
 		else if (ARCADE_DRIVE_METHOD == 2) {
 			double y = MainRobot.rightJoyStick.getY();
 			double x = MainRobot.rightJoyStick.getX();
@@ -51,7 +51,7 @@ public class ManualMethods {
 			MainRobot.setLeftMotors((y-x)*dist);
 			MainRobot.setRightMotors((y+x)*dist);
 		}
-		*/
+		
 	}
 
 	public static void relitiveDrive() {
