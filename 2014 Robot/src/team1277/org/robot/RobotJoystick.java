@@ -11,6 +11,7 @@ public class RobotJoystick {
 	public boolean isXBox = false;
 	public RobotJoystick(int port) {
 		stick = new Joystick(port);
+		this.hand = Hand.kLeft;
 	}
 	
 	public RobotJoystick(int port, Hand hand) {

@@ -10,6 +10,9 @@ public class Ports {
 	public static final int RIGHT_RANGE_FINDER = 2;
 	public static final int GYRO = 3;
 	
+	public static final int FRONT_LIGHT = 1;
+	public static final int BACK_LIGHT = 2;
+	
 	public static final int LEFT_JOYSTICK = 1;
 	public static final int RIGHT_JOYSTICK = 2;
 }
