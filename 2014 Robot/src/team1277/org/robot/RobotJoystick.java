@@ -15,6 +15,9 @@ public class RobotJoystick {
 	public RobotJoystick(int port, Hand hand) {
 		stick = new Joystick(port);
 	}
+	public RobotJoystick(Joystick joy, Hand hand) {
+		stick = joy;
+	}
 	
 	public double getX() {
 		if (hand.equals(Hand.kLeft)) {
@@ -49,5 +52,6 @@ public class RobotJoystick {
 	public double getRawAxis(int axis) {
 		return stick.getRawAxis(axis);
 	}
+	
 	
 }
