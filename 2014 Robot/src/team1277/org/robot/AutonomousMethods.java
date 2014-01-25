@@ -14,7 +14,7 @@ public class AutonomousMethods {
 
 	public static void lineUp() {
 		if (LINE_UP_METHOD == 1) {
-			lineUpWithAdjust();
+			//lineUpWithAdjust();
 		}
 		else if (LINE_UP_METHOD == 2) {
 			
