@@ -1,10 +1,10 @@
 package team1277.org.robot;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
-import edu.wpi.first.wpilibj.Dashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStationLCD.Line;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,9 +19,12 @@ public class MainRobot extends IterativeRobot {
 	public static AnalogChannel leftRangeFinder;
 	public static AnalogChannel rightRangeFinder;
 	
+	public static boolean useXBox = false;
 	
 	public static RobotJoystick rightJoyStick;
 	public static RobotJoystick leftJoyStick;
+	
+	private Joystick xbox;
 	
 	public static AnalogChannel gyro;
 	
@@ -41,6 +44,16 @@ public class MainRobot extends IterativeRobot {
 	
 	public void robotInit() {
 		System.out.println("Robot Started, Hello Dave.");
+		xbox = new Joystick(1);
+		useXBox = DriverStation.getInstance().getDigitalIn(1);
+		if (useXBox) {
+			leftJoyStick = new RobotJoystick(xbox, Hand.kRight,true);
+			rightJoyStick = new RobotJoystick(xbox, Hand.kLeft,true);
+		}
+		else {
+			leftJoyStick = new RobotJoystick(Ports.LEFT_JOYSTICK);
+			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
+		}
 		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
 		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
 
@@ -71,6 +84,15 @@ public class MainRobot extends IterativeRobot {
 	
 	
 	public void teleopInit() {
+		useXBox = DriverStation.getInstance().getDigitalIn(1);
+		if (useXBox) {
+			leftJoyStick = new RobotJoystick(xbox, Hand.kRight,true);
+			rightJoyStick = new RobotJoystick(xbox, Hand.kLeft,true);
+		}
+		else {
+			leftJoyStick = new RobotJoystick(Ports.LEFT_JOYSTICK);
+			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
+		}
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
                 Gyro.init();

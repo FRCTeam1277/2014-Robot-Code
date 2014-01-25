@@ -1,5 +1,6 @@
 package team1277.org.robot;
 
+
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -7,33 +8,40 @@ public class RobotJoystick {
 	private Joystick stick;
 	private Hand hand;
 	private RobotJoystick() {}
-	
+	public boolean isXBox = false;
 	public RobotJoystick(int port) {
 		stick = new Joystick(port);
 	}
 	
 	public RobotJoystick(int port, Hand hand) {
 		stick = new Joystick(port);
+		this.hand = hand;
 	}
-	public RobotJoystick(Joystick joy, Hand hand) {
+	public RobotJoystick(Joystick joy, Hand hand, boolean xbox) {
 		stick = joy;
+        this.hand=hand;
+        this.isXBox = xbox;
 	}
 	
 	public double getX() {
+		double m = 1;
+		if (isXBox) {
+			m=-1;
+		}
 		if (hand.equals(Hand.kLeft)) {
-			return stick.getRawAxis(1);
+			return m*stick.getRawAxis(1);
 		}
 		else {
-			return stick.getRawAxis(4);
+			return m*stick.getRawAxis(4);
 		}
 	}
 	
 	public double getY() {
 		if (hand.equals(Hand.kLeft)) {
-			return stick.getRawAxis(1);
+			return stick.getRawAxis(2);
 		}
 		else {
-			return stick.getRawAxis(4);
+			return stick.getRawAxis(5);
 		}
 	}
 	
