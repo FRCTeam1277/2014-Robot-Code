@@ -3,6 +3,7 @@ package team1277.org.robot;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStationLCD.Line;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,8 +19,10 @@ public class MainRobot extends IterativeRobot {
 	public static AnalogChannel rightRangeFinder;
 	
 	
-	public static Joystick rightJoyStick;
-	public static Joystick leftJoyStick;
+	public static RobotJoystick rightJoyStick;
+	public static RobotJoystick leftJoyStick;
+	
+	private Joystick xbox;
 	
 	public static AnalogChannel gyro;
 	
@@ -39,15 +42,19 @@ public class MainRobot extends IterativeRobot {
 	
 	public void robotInit() {
 		System.out.println("Robot Started, Hello Dave.");
+		xbox = new Joystick(1);
 		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
 		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
 
 		//leftMotor2 = new Jaguar(Ports.LEFT_DRIVE_PORT_2);
 		//rightMotor2 = new Jaguar(Ports.RIGHT_DRIVE_PORT_2);
 		
-		leftJoyStick = new Joystick(Ports.LEFT_JOYSTICK);
-		rightJoyStick = new Joystick(Ports.RIGHT_JOYSTICK);
-		
+		leftJoyStick = new RobotJoystick(xbox, Hand.kLeft);
+		rightJoyStick = new RobotJoystick(xbox, Hand.kRight);
+		if (false) {
+			leftJoyStick = new RobotJoystick(Ports.LEFT_JOYSTICK);
+			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
+		}
 		//leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		//rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 		//gyro = new AnalogChannel(Ports.GYRO);
