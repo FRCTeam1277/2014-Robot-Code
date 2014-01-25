@@ -39,6 +39,7 @@ public class MainRobot extends IterativeRobot {
 	
 	public void robotInit() {
 		System.out.println("Robot Started, Hello Dave.");
+		System.out.println("Hello World");
 		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
 		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
 
