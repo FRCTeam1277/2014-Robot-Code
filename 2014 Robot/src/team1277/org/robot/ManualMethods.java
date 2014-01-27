@@ -22,7 +22,7 @@ public class ManualMethods {
 			arcadeDrive();
 		}
 		else if (driveMode == 3) {
-			relitiveDrive();
+			relativeDrive();
 		}
 	}
 
@@ -43,7 +43,7 @@ public class ManualMethods {
 		if (ARCADE_DRIVE_METHOD == 1) {
 			adjustingArcadeDrive();
 		}
-		/*
+		
 		else if (ARCADE_DRIVE_METHOD == 2) {
 			double y = MainRobot.rightJoyStick.getY();
 			double x = MainRobot.rightJoyStick.getX();
@@ -51,10 +51,10 @@ public class ManualMethods {
 			MainRobot.setLeftMotors((y-x)*dist);
 			MainRobot.setRightMotors((y+x)*dist);
 		}
-		*/
+		
 	}
 
-	public static void relitiveDrive() {
+	public static void relativeDrive() {
 		double y = MainRobot.rightJoyStick.getY();
 		double x = MainRobot.rightJoyStick.getX();
 		double speed = Math.sqrt(y*y+x*x);
