@@ -58,6 +58,7 @@ public class MainRobot extends IterativeRobot {
 			leftJoyStick = new RobotJoystick(Ports.LEFT_JOYSTICK);
 			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
 		}
+		System.out.println("Hello World");
 		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
 		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
 
