@@ -1,4 +1,4 @@
-task deploy(dependsOn: suite) << {
+task deploy(dependsOn: [configure, suite]) << {
 	ant.frcdeploy(
 		remoteaddress: remoteAddress,
 		localfile: suite.suiteFile,
