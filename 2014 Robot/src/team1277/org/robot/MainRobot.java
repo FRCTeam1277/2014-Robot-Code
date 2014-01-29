@@ -148,7 +148,7 @@ public class MainRobot extends IterativeRobot {
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}
-		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Mode "+state);
+		DriverStationLCD.getInstance().println(Line.kUser1, 1, "kMode "+state);
 		DriverStationLCD.getInstance().updateLCD();
 		
 		LightPatterns.update(delta);

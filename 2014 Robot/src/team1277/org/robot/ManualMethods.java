@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD.Line;
 
 public class ManualMethods {
 	private final static int TANK_DRIVE_METHOD = 1;
-	private final static int ARCADE_DRIVE_METHOD = 1;
+	private final static int ARCADE_DRIVE_METHOD = 2;
 
 	public final static int DRIVE_MODE_TANK = 1;
 	public final static int DRIVE_MODE_ARCADE = 2;
