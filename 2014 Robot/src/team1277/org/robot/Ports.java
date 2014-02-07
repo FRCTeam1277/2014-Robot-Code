@@ -15,4 +15,7 @@ public class Ports {
 	
 	public static final int LEFT_JOYSTICK = 1;
 	public static final int RIGHT_JOYSTICK = 2;
+	
+	public static final int SOLENOID_RELEASE = 1;
+	public static final int SOLENOID_RETRACT = 2;
 }

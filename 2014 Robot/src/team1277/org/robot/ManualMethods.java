@@ -120,6 +120,27 @@ public class ManualMethods {
 	private static void adjustingArcadeDrive() {
 		ArcadeMode.arcadeDrive();
 	}
+	
+	
+	static boolean isGrabberOut = false;
+	public static void pnumatics() {
+		if (!isGrabberOut && MainRobot.leftJoyStick.getRawButton(3)) {
+			isGrabberOut = true;
+			System.out.println("Grabber "+isGrabberOut);
+		}
+		else if (isGrabberOut && MainRobot.leftJoyStick.getRawButton(2)) {
+			isGrabberOut = false;
+
+			System.out.println("Grabber "+isGrabberOut);
+		}
+		if (isGrabberOut) {
+			MainRobot.releaseSol.set(true);
+			MainRobot.retractSol.set(false);
+		} else {
+			MainRobot.releaseSol.set(false);
+			MainRobot.retractSol.set(true);
+		}
+	}
 
 	/**
 	 * End Liam's Arcade Drive

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class MainRobot extends IterativeRobot {
 	//Declaring static components
@@ -31,6 +32,9 @@ public class MainRobot extends IterativeRobot {
 	private Joystick xbox;
 
 	public static AnalogChannel gyro;
+	
+	public static Solenoid retractSol;
+	public static Solenoid releaseSol;
 
 
 
@@ -75,7 +79,8 @@ public class MainRobot extends IterativeRobot {
 		frontLight = new Relay(Ports.FRONT_LIGHT);
 		backLight = new Relay(Ports.BACK_LIGHT);
 
-
+		retractSol = new Solenoid(Ports.SOLENOID_RETRACT);
+		releaseSol = new Solenoid(Ports.SOLENOID_RELEASE);
 
 	}
 
@@ -148,6 +153,8 @@ public class MainRobot extends IterativeRobot {
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}
+		
+		ManualMethods.pnumatics();
 		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Mode "+state);
 		DriverStationLCD.getInstance().updateLCD();
 		
