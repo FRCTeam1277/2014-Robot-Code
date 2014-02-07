@@ -1,1 +1,6 @@
 /bin
+build/
+.gradle/
+eclipse-bin/
+bin/
+emulator.cfg
