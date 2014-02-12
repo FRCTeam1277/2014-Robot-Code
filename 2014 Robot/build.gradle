@@ -1,4 +1,4 @@
-logging.level = LogLevel.INFO
+logging.level = LogLevel.DEBUG
 
 apply plugin: 'java'
 
