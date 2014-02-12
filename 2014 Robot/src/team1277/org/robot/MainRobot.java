@@ -92,7 +92,7 @@ public class MainRobot extends IterativeRobot {
 			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
 		}
 		state = States.TELEOP_MANUAL_DRIVE;
-		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_ARCADE;
+		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
                 //Gyro.init();
 	}
 	
@@ -134,7 +134,7 @@ public class MainRobot extends IterativeRobot {
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}
-		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Mode "+state);
+		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Test Mode "+state);
 		DriverStationLCD.getInstance().updateLCD();
 	}
 	

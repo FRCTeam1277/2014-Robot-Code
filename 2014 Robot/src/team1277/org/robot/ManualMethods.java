@@ -12,7 +12,7 @@ public class ManualMethods {
 
 	public final static int DRIVE_MODE_TANK = 1;
 	public final static int DRIVE_MODE_ARCADE = 2;
-	public static int driveMode = 2;
+	public static int driveMode = 1;
 
 	public static void driveChain() {
 		if (driveMode == DRIVE_MODE_TANK) {
