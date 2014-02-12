@@ -1,5 +1,3 @@
-logging.level = LogLevel.DEBUG
-
 apply plugin: 'java'
 
 ext {

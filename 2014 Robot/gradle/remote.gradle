@@ -6,15 +6,16 @@
 */
 
 task runRemote(dependsOn: deploy) << {
+	logging.level = LogLevel.INFO
 	ant.frcrun(remoteaddress: remoteAddress)
 }
 
 task runDebugRemote(dependsOn: deploy) << {
+	logging.level = LogLevel.INFO
 	ant.frcrun(remoteaddress: remoteAddress, debug: true)
 }
 
 task debugRemote(type: JavaExec, dependsOn: deploy) {
-	
 	doFirst {
 		println "Connecting to debug on $remoteAddress:2800"
 	}

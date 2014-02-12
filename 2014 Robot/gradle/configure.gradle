@@ -1,4 +1,6 @@
 task configure(dependsOn: suite) << {
+	logging.level = LogLevel.INFO
+	
 	if(new File(sdkRoot, 'cRIO_conf').isDirectory())
 	{
 		// Copy cRIO config onto robot
