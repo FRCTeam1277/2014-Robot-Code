@@ -5,16 +5,17 @@
 	- debugRemote to connect to the debug server started by remoteDebugRun
 */
 
-task runRemote << {
+task runRemote(dependsOn: deploy) << {
+	logging.level = LogLevel.INFO
 	ant.frcrun(remoteaddress: remoteAddress)
 }
 
-task runDebugRemote << {
+task runDebugRemote(dependsOn: deploy) << {
+	logging.level = LogLevel.INFO
 	ant.frcrun(remoteaddress: remoteAddress, debug: true)
 }
 
-task debugRemote(type: JavaExec, dependsOn: appJar) {
-	
+task debugRemote(type: JavaExec, dependsOn: deploy) {
 	doFirst {
 		println "Connecting to debug on $remoteAddress:2800"
 	}

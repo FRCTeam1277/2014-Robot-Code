@@ -1,4 +1,5 @@
 task deploy(dependsOn: [configure, suite]) << {
+	logging.level = LogLevel.INFO
 	ant.frcdeploy(
 		remoteaddress: remoteAddress,
 		localfile: suite.suiteFile,

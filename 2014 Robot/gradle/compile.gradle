@@ -10,3 +10,4 @@ compileJava {
 	options.debug = true
 	options.deprecation = true
 }
+compileJava.dependsOn clean
