@@ -1,6 +1,6 @@
 // Configure Java compilation
 
-compileJava(dependsOn: clean) {
+compileJava {
 	options.fork = true
 	options.bootClasspath = configurations.boot.asPath
 	
@@ -10,3 +10,4 @@ compileJava(dependsOn: clean) {
 	options.debug = true
 	options.deprecation = true
 }
+compileJava.dependsOn clean
