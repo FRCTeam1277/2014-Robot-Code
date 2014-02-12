@@ -1,6 +1,6 @@
 // Configure Java compilation
 
-compileJava {
+compileJava(dependsOn: clean) {
 	options.fork = true
 	options.bootClasspath = configurations.boot.asPath
 	
