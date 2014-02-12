@@ -53,7 +53,7 @@ public class MainRobot extends IterativeRobot {
 		//leftMotor2 = new Jaguar(Ports.LEFT_DRIVE_PORT_2);
 		//rightMotor2 = new Jaguar(Ports.RIGHT_DRIVE_PORT_2);
 
-		useXBox = DriverStation.getInstance().getDigitalIn(1);
+		useXBox = !DriverStation.getInstance().getDigitalIn(1);
 		if (useXBox) {
 			leftJoyStick = new RobotJoystick(xbox, Hand.kRight,true);
 			rightJoyStick = new RobotJoystick(xbox, Hand.kLeft,true);
