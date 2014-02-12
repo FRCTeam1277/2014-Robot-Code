@@ -1,4 +1,4 @@
-task configure << {
+task configure(dependsOn: suite) << {
 	if(new File(sdkRoot, 'cRIO_conf').isDirectory())
 	{
 		// Copy cRIO config onto robot
