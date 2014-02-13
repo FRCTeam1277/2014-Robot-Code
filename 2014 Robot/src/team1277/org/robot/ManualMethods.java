@@ -2,8 +2,10 @@ package team1277.org.robot;
 
 import com.sun.squawk.util.MathUtils;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStationLCD.Line;
+import edu.wpi.first.wpilibj.Relay.Value;
 
 
 public class ManualMethods {
@@ -122,6 +124,12 @@ public class ManualMethods {
 	}
 	
 	
+	
+
+	/**
+	 * End Liam's Arcade Drive
+	 */
+	
 	static boolean isGrabberOut = false;
 	public static void pnumatics() {
 		if (!isGrabberOut && MainRobot.leftJoyStick.getRawButton(3)) {
@@ -140,9 +148,37 @@ public class ManualMethods {
 			MainRobot.releaseSol.set(false);
 			MainRobot.retractSol.set(true);
 		}
+		//MainRobot.compressor.set(Value.kForward);
+		
+		if (MainRobot.pressureSwitch.get()) {
+			MainRobot.compressor.set(Value.kOff);
+		}
+		else
+		{
+			MainRobot.compressor.set(Value.kForward);
+		}
+		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(MainRobot.pressureSwitch.get()));
+		System.out.println("ON?");
 	}
-
-	/**
-	 * End Liam's Arcade Drive
-	 */
+	
+	public static boolean ballGrabberOn = false;
+	public static boolean ballGrabButton = false;
+	public static void ballGrabber() {
+		if (ballGrabberOn&&!ballGrabButton&&MainRobot.rightJoyStick.getRawButton(1)) {
+			ballGrabberOn = false;
+			ballGrabButton = true;
+		}
+		else if (!ballGrabberOn&&!ballGrabButton&&MainRobot.rightJoyStick.getRawButton(1)) {
+			ballGrabberOn = false;
+			ballGrabButton = true;
+		}
+		else if (!MainRobot.rightJoyStick.getRawButton(1)) {
+			ballGrabButton = false;
+		}
+	}
+	
+	public static void initPnumatics() {
+		isGrabberOut = false;
+		ballGrabberOn = false;
+	}
 }

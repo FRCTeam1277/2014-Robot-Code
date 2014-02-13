@@ -1,6 +1,8 @@
 package team1277.org.robot;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStationLCD.Line;
@@ -9,6 +11,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class MainRobot extends IterativeRobot {
@@ -36,7 +39,11 @@ public class MainRobot extends IterativeRobot {
 	public static Solenoid retractSol;
 	public static Solenoid releaseSol;
 
-
+	//public static Compressor compressor;
+	public static DigitalInput pressureSwitch;
+	public static Relay compressor;
+	
+	public static Relay ballGrabber;
 
 	/**
 	 * The current state of the robot
@@ -81,6 +88,12 @@ public class MainRobot extends IterativeRobot {
 
 		retractSol = new Solenoid(Ports.SOLENOID_RETRACT);
 		releaseSol = new Solenoid(Ports.SOLENOID_RELEASE);
+		
+		//compressor = new Compressor(Ports.PRESSURE_SWITCH_PORT,Ports.COMPRESSOR_PORT);
+		compressor = new Relay(Ports.COMPRESSOR_PORT);
+		pressureSwitch = new DigitalInput(Ports.PRESSURE_SWITCH_PORT);
+		
+		ballGrabber = new Relay(Ports.BALL_GRABBER_MOTOR);
 
 	}
 
@@ -88,12 +101,16 @@ public class MainRobot extends IterativeRobot {
 	public void disabledInit() {
 		setLeftMotors(0);
 		setRightMotors(0);
+		compressor.set(Value.kOff);
+		ballGrabber.set(Value.kOff);
+		//compressor.stop();
 	}
 
 
 	public void disabledPeriodic() {
 
 	}
+	
 	long lastTime = 0;
 
 	public void teleopInit() {
@@ -109,6 +126,8 @@ public class MainRobot extends IterativeRobot {
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
 		Gyro.init();
+		//compressor.start();
+		ManualMethods.initPnumatics();
 		lastTime = System.currentTimeMillis();
 	}
 
@@ -157,8 +176,9 @@ public class MainRobot extends IterativeRobot {
 		ManualMethods.pnumatics();
 		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Mode "+state);
 		DriverStationLCD.getInstance().updateLCD();
-		
+		System.out.println(pressureSwitch.get());
 		LightPatterns.update(delta);
+		ManualMethods.ballGrabber();
 	}
 
 
