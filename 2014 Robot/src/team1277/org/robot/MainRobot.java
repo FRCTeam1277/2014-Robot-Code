@@ -1,8 +1,11 @@
 package team1277.org.robot;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStationLCD.Line;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
@@ -18,8 +21,12 @@ public class MainRobot extends IterativeRobot {
 	public static AnalogChannel rightRangeFinder;
 	
 	
-	public static Joystick rightJoyStick;
-	public static Joystick leftJoyStick;
+	public static RobotJoystick rightJoyStick;
+	public static RobotJoystick leftJoyStick;
+	
+	public static boolean useXBox = false;
+	
+	private Joystick xbox;
 	
 	public static AnalogChannel gyro;
 	
@@ -39,15 +46,22 @@ public class MainRobot extends IterativeRobot {
 	
 	public void robotInit() {
 		System.out.println("Robot Started, Hello Dave.");
+		xbox = new Joystick(1);
 		leftMotor1 = new Jaguar(Ports.LEFT_DRIVE_PORT_1);
 		rightMotor1 = new Jaguar(Ports.RIGHT_DRIVE_PORT_1);
 
 		//leftMotor2 = new Jaguar(Ports.LEFT_DRIVE_PORT_2);
 		//rightMotor2 = new Jaguar(Ports.RIGHT_DRIVE_PORT_2);
-		
-		leftJoyStick = new Joystick(Ports.LEFT_JOYSTICK);
-		rightJoyStick = new Joystick(Ports.RIGHT_JOYSTICK);
-		
+
+		useXBox = !DriverStation.getInstance().getDigitalIn(1);
+		if (useXBox) {
+			leftJoyStick = new RobotJoystick(xbox, Hand.kRight,true);
+			rightJoyStick = new RobotJoystick(xbox, Hand.kLeft,true);
+		}
+		else {
+			leftJoyStick = new RobotJoystick(Ports.LEFT_JOYSTICK);
+			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
+		}
 		//leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		//rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 		//gyro = new AnalogChannel(Ports.GYRO);
@@ -68,6 +82,15 @@ public class MainRobot extends IterativeRobot {
 	
 	
 	public void teleopInit() {
+		useXBox = DriverStation.getInstance().getDigitalIn(1);
+		if (useXBox) {
+			leftJoyStick = new RobotJoystick(xbox, Hand.kRight,true);
+			rightJoyStick = new RobotJoystick(xbox, Hand.kLeft,true);
+		}
+		else {
+			leftJoyStick = new RobotJoystick(Ports.LEFT_JOYSTICK);
+			rightJoyStick = new RobotJoystick(Ports.RIGHT_JOYSTICK);
+		}
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
                 //Gyro.init();
@@ -128,20 +151,11 @@ public class MainRobot extends IterativeRobot {
 		else if (rightJoyStick.getRawButton(5)) {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, "5");
 			ManualMethods.kickMode = ManualMethods.KICK_MODE_FIRE;
-			state = States.TELEOP_AUTOMATIC_RELEASE;
 		}
-		//GYRO DRIVE(DONT USE)
-		/*
-		else if (rightJoyStick.getRawButton(4)) {
-			DriverStationLCD.getInstance().println(Line.kUser2, 1, "4");
-			ManualMethods.driveMode = 3;
-			state = States.TELEOP_MANUAL_DRIVE;
-		}
-		*/
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}
-		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Mode "+state);
+		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Test Mode "+state);
 		DriverStationLCD.getInstance().updateLCD();
 	}
 	

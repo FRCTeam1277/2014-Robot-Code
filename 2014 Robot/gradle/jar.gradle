@@ -1,0 +1,15 @@
+// App jar
+task appJar(type: Jar, dependsOn: preverify) {
+	archiveName = 'robot-app.jar'
+	from preverify.preverifyDir
+	from sourceSets.main.output.resourcesDir
+	
+	manifest {
+		attributes 'MIDlet-Name': project.name
+		attributes 'MIDlet-Version': project.version ?: '1.0.0'
+		attributes 'MIDlet-Vendor': 'FIRST'
+		attributes 'MIDlet-1': robotClass.substring(robotClass.lastIndexOf('.') + 1) + ", , " + robotClass
+		attributes 'MicroEdition-Profile': 'IMP-1.0'
+		attributes 'MicroEdition-Configuration': 'CLDC-1.1'
+	}
+}

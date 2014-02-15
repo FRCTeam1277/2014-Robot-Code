@@ -1,0 +1,39 @@
+// Preverify
+task preverify(type: Exec, dependsOn: compileJava) {
+	ext {
+		preverifyDir = new File(buildDir, "preverify")
+		rawUtilJarClassesDir = new File(buildDir, "preverify.raw.util")
+		
+		rawUtilJars = []
+		preverifiedUtilJars = configurations.compile.files
+		
+		pathSep = System.getProperty('path.separator')
+	}
+	doFirst {
+		rawUtilJarClassesDir.mkdir()
+		preverifyDir.mkdir()
+		
+		copy {
+			preverifiedUtilJars.each {
+				from zipTree(it)
+			}
+			into preverifyDir
+		}
+		copy {
+			rawUtilJars.each {
+				from zipTree(it)
+			}
+			into rawUtilJarClassesDir
+		}
+	}
+	
+	executable "$sdkRoot/bin/preverify"
+	args "-d", preverifyDir
+	args "-classpath", configurations.boot.asPath + pathSep + sourceSets.main.output.classesDir + pathSep + preverifyDir
+	args sourceSets.main.output.classesDir
+	args rawUtilJarClassesDir
+	
+	inputs.files compileJava.destinationDir
+	outputs.dir preverifyDir
+	outputs.dir rawUtilJarClassesDir
+}
