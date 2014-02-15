@@ -71,43 +71,73 @@ public class MainRobot extends IterativeRobot {
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
                 //Gyro.init();
+		//INFO-INFO-INFO
+		//BUTTON MAP
+		//1 = Automatic Lineup Mode//
+		//2 = Tank Drive
+		//3 = Arcade Drive
+		//4 = Load Kicker
+		//5 = Fire Kicker
 	}
 	
 	
 	public void teleopPeriodic() {
-		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
-		DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(Gyro.getAngle()));
-		Gyro.updateAngle(20d/1000d);
+		//COMMENTED ALL GYROSTUFF
+		//DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
+		//DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(Gyro.getAngle()));
+		//Gyro.updateAngle(20d/1000d);
+		
 		if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
 		}
 		else if (state == States.TELEOP_AUTOMATIC_LINEUP) {
 			AutonomousMethods.lineUp();
 		}
-		
-		/*if (rightJoyStick.getRawButton(1)) {
+		else if (state == States.TELEOP_AUTOMATIC_LOAD) {
+			ManualMethods.useKicker();
+		}
+		else if (state == States.TELEOP_AUTOMATIC_RELEASE) {
+			ManualMethods.useKicker();
+		}
+		//AUTO LINEUP
+		if (rightJoyStick.getRawButton(1)) {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, "1");
 			
 			state = States.TELEOP_AUTOMATIC_LINEUP;
-		}*/
-		//System.out.println("t");
+		}
 		
+		//TANK DRIVE
 		else if (rightJoyStick.getRawButton(2)) {
 			ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, "2");
 			state = States.TELEOP_MANUAL_DRIVE;
 		}
-		
+		//ARCADE DRIVE
 		else if (rightJoyStick.getRawButton(3)) {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, "3");
 			ManualMethods.driveMode = ManualMethods.DRIVE_MODE_ARCADE;
 			state = States.TELEOP_MANUAL_DRIVE;
 		}
+		//LOAD
+		else if (rightJoyStick.getRawButton(4)) {
+			DriverStationLCD.getInstance().println(Line.kUser2, 1, "4");
+			ManualMethods.kickMode = ManualMethods.KICK_MODE_LOAD;
+			state = States.TELEOP_AUTOMATIC_LOAD;
+		}
+		//FIRE
+		else if (rightJoyStick.getRawButton(5)) {
+			DriverStationLCD.getInstance().println(Line.kUser2, 1, "5");
+			ManualMethods.kickMode = ManualMethods.KICK_MODE_FIRE;
+			state = States.TELEOP_AUTOMATIC_RELEASE;
+		}
+		//GYRO DRIVE(DONT USE)
+		/*
 		else if (rightJoyStick.getRawButton(4)) {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, "4");
 			ManualMethods.driveMode = 3;
 			state = States.TELEOP_MANUAL_DRIVE;
 		}
+		*/
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
 		}
