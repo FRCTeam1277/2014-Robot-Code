@@ -12,8 +12,13 @@ public class ManualMethods {
 
 	public final static int DRIVE_MODE_TANK = 1;
 	public final static int DRIVE_MODE_ARCADE = 2;
+	
+	public final static int KICK_MODE_LOAD = 1;
+	public final static int KICK_MODE_FIRE = 2;
+	
 	public static int driveMode = 1;
-
+	public static int kickMode = 1;
+	//This is: WHICH DRIVE DO WE DO?  Based on value set in MainRobot.
 	public static void driveChain() {
 		if (driveMode == DRIVE_MODE_TANK) {
 			tankDrive();
@@ -25,7 +30,17 @@ public class ManualMethods {
 			//relitiveDrive();
 		}
 	}
-
+	public static void useKicker(){
+		//LOAD
+		if(kickMode == 1){
+			loadKicker();
+		}
+		
+		//FIRE
+		if(kickMode == 2){
+			releaseKicker();
+		}
+	}
 	public static void tankDrive() {
 
 		//Liams Tanks Drive
@@ -40,10 +55,11 @@ public class ManualMethods {
 	}
 
 	public static void arcadeDrive() {
+		//Liams: BETTER
 		if (ARCADE_DRIVE_METHOD == 1) {
 			adjustingArcadeDrive();
 		}
-		
+		//Nicks: WORKS
 		else if (ARCADE_DRIVE_METHOD == 2) {
 			double y = MainRobot.rightJoyStick.getY();
 			double x = MainRobot.rightJoyStick.getX();
@@ -53,7 +69,9 @@ public class ManualMethods {
 		}
 		
 	}
-
+	
+	//GYRO STUFF
+	/*
 	public static void relitiveDrive() {
 		double y = MainRobot.rightJoyStick.getY();
 		double x = MainRobot.rightJoyStick.getX();
@@ -65,8 +83,8 @@ public class ManualMethods {
 			ang=360+ang;
 
 		DriverStationLCD.getInstance().println(Line.kUser5, 1, String.valueOf(ang));
-		//MainRobot.setLeftMotors(-speed/**change*/);
-		//MainRobot.setRightMotors(speed/**change*/);
+		//MainRobot.setLeftMotors(-speed/**change*//*);ADDED THE LAST COMMENT SYMBOL
+		//MainRobot.setRightMotors(speed/**change*//*);
 		if (Math.abs(Gyro.getAngle()-ang)>=5&&Math.abs(Gyro.getAngle()-ang)<=175) {
 			if (speed<.13)
 				return;
@@ -114,14 +132,21 @@ public class ManualMethods {
 
 
 	/**
-	 * Start Liam's Arcade Drive
+	 * Start Liam's Arcade Drive(This is HUGE)
 	 */
 
 	private static void adjustingArcadeDrive() {
 		ArcadeMode.arcadeDrive();
-	}
+	}	
 
 	/**
 	 * End Liam's Arcade Drive
 	 */
+	private static void loadKicker(){
+		
+	}
+	private static void releaseKicker(){
+		
+	}
+	
 }
