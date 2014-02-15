@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 
 public class MainRobot extends IterativeRobot {
 	//Declaring static components
@@ -29,6 +31,8 @@ public class MainRobot extends IterativeRobot {
 	private Joystick xbox;
 	
 	public static AnalogChannel gyro;
+	
+	public static Relay winch;
 	
 	
 	
@@ -65,6 +69,9 @@ public class MainRobot extends IterativeRobot {
 		//leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		//rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 		//gyro = new AnalogChannel(Ports.GYRO);
+		
+		winch = new Relay(Ports.WINCH_RETRACT_RELAY_PORT);
+		
                 
                 
 	}
@@ -73,6 +80,7 @@ public class MainRobot extends IterativeRobot {
 	public void disabledInit() {
 		setLeftMotors(0);
 		setRightMotors(0);
+		winch.set(Value.kOff);
 	}
 	
 	
@@ -98,23 +106,15 @@ public class MainRobot extends IterativeRobot {
 	
 	
 	public void teleopPeriodic() {
-//		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
-//		DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(Gyro.getAngle()));
-//		Gyro.updateAngle(20d/1000d);
+//		
+		
+		winch.set(Value.kForward);
 		if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
 		}
 		else if (state == States.TELEOP_AUTOMATIC_LINEUP) {
 			AutonomousMethods.lineUp();
 		}
-		
-		/*if (rightJoyStick.getRawButton(1)) {
-			DriverStationLCD.getInstance().println(Line.kUser2, 1, "1");
-			
-			state = States.TELEOP_AUTOMATIC_LINEUP;
-		}*/
-		//System.out.println("t");
-		
 		else if (rightJoyStick.getRawButton(2)) {
 			ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, "2");
