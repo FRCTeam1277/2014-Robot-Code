@@ -6,12 +6,12 @@
 */
 
 task runRemote(dependsOn: deploy) << {
-	logging.level = LogLevel.INFO
+	logging.level = LogLevel.DEBUG
 	ant.frcrun(remoteaddress: remoteAddress)
 }
 
 task runDebugRemote(dependsOn: deploy) << {
-	logging.level = LogLevel.INFO
+	logging.level = LogLevel.DEBUG
 	ant.frcrun(remoteaddress: remoteAddress, debug: true)
 }
 

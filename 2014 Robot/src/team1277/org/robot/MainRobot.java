@@ -174,11 +174,11 @@ public class MainRobot extends IterativeRobot {
 		}
 		
 		ManualMethods.pnumatics();
-		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Mode "+state);
-		DriverStationLCD.getInstance().updateLCD();
-		System.out.println(pressureSwitch.get());
-		LightPatterns.update(delta);
 		ManualMethods.ballGrabber();
+		DriverStationLCD.getInstance().println(Line.kUser1, 1, "TestMode "+state);
+		DriverStationLCD.getInstance().updateLCD();
+		//System.out.println(pressureSwitch.get());
+		LightPatterns.update(delta);
 	}
 
 

@@ -134,12 +134,12 @@ public class ManualMethods {
 	public static void pnumatics() {
 		if (!isGrabberOut && MainRobot.leftJoyStick.getRawButton(3)) {
 			isGrabberOut = true;
-			System.out.println("Grabber "+isGrabberOut);
+			//System.out.println("Grabber "+isGrabberOut);
 		}
 		else if (isGrabberOut && MainRobot.leftJoyStick.getRawButton(2)) {
 			isGrabberOut = false;
 
-			System.out.println("Grabber "+isGrabberOut);
+			//System.out.println("Grabber "+isGrabberOut);
 		}
 		if (isGrabberOut) {
 			MainRobot.releaseSol.set(true);
@@ -157,24 +157,36 @@ public class ManualMethods {
 		{
 			MainRobot.compressor.set(Value.kForward);
 		}
-		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(MainRobot.pressureSwitch.get()));
-		System.out.println("ON?");
+		//DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(MainRobot.pressureSwitch.get()));
+		//System.out.println("ON?");
 	}
 	
 	public static boolean ballGrabberOn = false;
 	public static boolean ballGrabButton = false;
+	
 	public static void ballGrabber() {
-		if (ballGrabberOn&&!ballGrabButton&&MainRobot.rightJoyStick.getRawButton(1)) {
+		if (ballGrabberOn&&!ballGrabButton&&MainRobot.leftJoyStick.getRawButton(1)) {
 			ballGrabberOn = false;
 			ballGrabButton = true;
 		}
-		else if (!ballGrabberOn&&!ballGrabButton&&MainRobot.rightJoyStick.getRawButton(1)) {
-			ballGrabberOn = false;
+		else if (!ballGrabberOn&&!ballGrabButton&&MainRobot.leftJoyStick.getRawButton(1)) {
+			ballGrabberOn = true;
 			ballGrabButton = true;
 		}
-		else if (!MainRobot.rightJoyStick.getRawButton(1)) {
+		else if (!MainRobot.leftJoyStick.getRawButton(1)) {
 			ballGrabButton = false;
 		}
+		if (ballGrabberOn) {
+			MainRobot.ballGrabber.set(Value.kOn);
+			MainRobot.ballGrabber.set(Value.kForward);
+
+			System.out.println("Test Motor");
+		}
+		else  {
+			MainRobot.ballGrabber.set(Value.kOff);
+		}
+		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(ballGrabberOn));
+		
 	}
 	
 	public static void initPnumatics() {
