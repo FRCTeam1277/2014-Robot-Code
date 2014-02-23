@@ -1,8 +1,8 @@
 package team1277.org.robot;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.DriverStationLCD.Line;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -19,6 +19,8 @@ public class MainRobot extends IterativeRobot {
 	public static Jaguar leftMotor1;
 	//public static Jaguar leftMotor2;
 	
+	public static Jaguar winchRelease;
+	
 	public static AnalogChannel leftRangeFinder;
 	public static AnalogChannel rightRangeFinder;
 	
@@ -30,11 +32,18 @@ public class MainRobot extends IterativeRobot {
 	
 	private Joystick xbox;
 	
+	public static Jaguar winch;
+	
+	public static DigitalInput armLimit;
+	public static DigitalInput clutchOpenLimit;
+	public static DigitalInput clutchCloseLimit;
+	
 	public static AnalogChannel gyro;
 	
-	public static Relay winch;
+	public static AnalogChannel winchPot;
+	//public static DigitalInput winc
 	
-	
+	public static Relay arms;
 	
 	/**
 	 * The current state of the robot
@@ -70,7 +79,8 @@ public class MainRobot extends IterativeRobot {
 		//rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 		//gyro = new AnalogChannel(Ports.GYRO);
 		
-		winch = new Relay(Ports.WINCH_RETRACT_RELAY_PORT);
+		winch = new Jaguar(Ports.WINCH_RETRACT_PORT);
+		winchRelease = new Jaguar(Ports.WINCH_RELEASE_PORT);
 		
 		//leftMotor2 = new Jaguar(Ports.LEFT_DRIVE_PORT_2);
 		//rightMotor2 = new Jaguar(Ports.RIGHT_DRIVE_PORT_2);
@@ -87,15 +97,22 @@ public class MainRobot extends IterativeRobot {
 		//leftRangeFinder = new AnalogChannel(Ports.LEFT_RANGE_FINDER);
 		//rightRangeFinder = new AnalogChannel(Ports.RIGHT_RANGE_FINDER);
 		//gyro = new AnalogChannel(Ports.GYRO);
-                
-                
+		armLimit = new DigitalInput(Ports.ARM_RETRACTED_LIMIT_PORT);
+		clutchOpenLimit = new DigitalInput(Ports.WINCH_HOLD_OPEN_PORT);
+		clutchCloseLimit = new DigitalInput(Ports.WINCH_HOLD_CLOSED_PORT);
+		
+		winchPot = new AnalogChannel(Ports.WINCH_POT_PORT);
+		
+		arms = new Relay(Ports.ARMS_RELAY_PORT);
 	}
 	
 	
 	public void disabledInit() {
 		setLeftMotors(0);
 		setRightMotors(0);
-		winch.set(Value.kOff);
+		winch.set(0);
+		winchRelease.set(0);
+		arms.set(Value.kOff);
 	}
 	
 	
@@ -116,6 +133,8 @@ public class MainRobot extends IterativeRobot {
 		}
 		state = States.TELEOP_MANUAL_DRIVE;
 		ManualMethods.driveMode = ManualMethods.DRIVE_MODE_TANK;
+		
+		KickerWinch.init(KickerWinch.INIT_STATE_RELAXED);
                 //Gyro.init();
                 //Gyro.init();
 		//INFO-INFO-INFO
@@ -127,17 +146,22 @@ public class MainRobot extends IterativeRobot {
 		//5 = Fire Kicker
 	}
 	
+	static long time = 0;
+	static long lastFrame = -1;
+	
+	static boolean r3Down = false;
+	static long lastR3 = -1;
+	static boolean armsInUse = false;
+	static boolean armsGoingUp = false;
 	
 	public void teleopPeriodic() {
-//		
-		
-		winch.set(Value.kForward);
+		DriverStationLCD.getInstance().clear();
 		//COMMENTED ALL GYROSTUFF
 		//DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(gyro.getAverageVoltage()));
 		//DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(Gyro.getAngle()));
 		//Gyro.updateAngle(20d/1000d);
-		
-		if (state == States.TELEOP_MANUAL_DRIVE) {
+		ManualMethods.driveChain();
+		/*if (state == States.TELEOP_MANUAL_DRIVE) {
 			ManualMethods.driveChain();
 		}
 		else if (state == States.TELEOP_AUTOMATIC_LINEUP) {
@@ -182,8 +206,121 @@ public class MainRobot extends IterativeRobot {
 		}
 		else {
 			DriverStationLCD.getInstance().println(Line.kUser2, 1, " ");
+		}*/
+		
+		if (rightJoyStick.getRawButton(4)) {
+			arms.set(Value.kReverse);
 		}
+		else if (rightJoyStick.getRawButton(5)) {
+			arms.set(Value.kForward);
+		}
+		else {
+				
+		
+			
+			boolean flag = true;
+			if (rightJoyStick.getRawButton(3) && !armsInUse) {
+				if (!r3Down) {
+					lastR3 = System.currentTimeMillis();
+					r3Down = true;
+					armsGoingUp = true;
+					armsInUse = true;
+				}
+				
+			} else {
+				if (r3Down) {
+					lastR3 = System.currentTimeMillis();
+					r3Down = false;
+					armsGoingUp = false;
+					armsInUse = true;
+				}
+				
+			}
+			if (armsInUse && armsGoingUp) {
+				if (System.currentTimeMillis()-lastR3<500) {
+					arms.set(Value.kForward);
+					flag = false;
+				}
+				else {
+					armsInUse = false;
+				}
+			}
+			else if (armsInUse && !armsGoingUp){
+				if (System.currentTimeMillis()-lastR3<500) {
+					arms.set(Value.kReverse);
+					flag = false;
+				}
+				else {
+					armsInUse = false;
+				}
+			}
+			if (flag) {
+				arms.set(Value.kOff);
+			}
+		}
+		
+		if (leftJoyStick.getRawButton(4)) {
+			if (leftJoyStick.getRawButton(1)) {
+				winchRelease.set(.5);
+			}
+			else {
+				winchRelease.set(1);
+			}
+		}
+		else if (leftJoyStick.getRawButton(5)) {
+			if (leftJoyStick.getRawButton(1)) {
+				winchRelease.set(-.5);
+			}
+			else {
+				winchRelease.set(-1);
+			}
+		}
+		else {
+			winchRelease.set(0);
+		}
+		
+		if (leftJoyStick.getRawButton(3)) {
+			if (lastFrame != -1) {
+				time += System.currentTimeMillis()-lastFrame;
+			}
+			lastFrame = System.currentTimeMillis();
+			winch.set(1);
+		}
+		else if(leftJoyStick.getRawButton(2)) {
+			if (lastFrame != -1) {
+				time += System.currentTimeMillis()-lastFrame;
+			}
+			lastFrame = System.currentTimeMillis();
+			winch.set(-1);
+		}
+		else {
+			lastFrame = -1;
+			winch.set(0);
+		}
+		
+		/*if (leftJoyStick.getRawButton(1)) {
+			time = 0;
+		}*/
+		
+		
+		if (leftJoyStick.getRawButton(1)) {
+			KickerWinch.reload();
+		}
+		
+		if (rightJoyStick.getRawButton(1)) {
+			KickerWinch.launch();
+		}
+		
+		if (!rightJoyStick.getRawButton(2)) {
+			KickerWinch.onLoop();
+		}
+		
+		
 		DriverStationLCD.getInstance().println(Line.kUser1, 1, "Test Mode "+state);
+		DriverStationLCD.getInstance().println(Line.kUser2, 1, String.valueOf(clutchOpenLimit.get()));
+		DriverStationLCD.getInstance().println(Line.kUser3, 1, String.valueOf(clutchCloseLimit.get()));
+		DriverStationLCD.getInstance().println(Line.kUser4, 1, String.valueOf(winchPot.getVoltage()));
+		//DriverStationLCD.getInstance().println(Line.kUser5, 1, String.valueOf(time));
 		DriverStationLCD.getInstance().updateLCD();
 	}
 	
